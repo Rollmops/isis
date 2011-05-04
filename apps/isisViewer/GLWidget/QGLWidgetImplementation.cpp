@@ -188,10 +188,10 @@ bool QGLWidgetImplementation::calculateTranslation(  )
 	float shiftY =  center.second - ( state.mappedVoxelCoords[1] < 0 ? abs( state.mappedImageSize[1] ) + state.mappedVoxelCoords[1] : state.mappedVoxelCoords[1] );
 	shiftX = ( 1.0 / abs( state.mappedImageSize[0] ) ) * shiftX ;
 	shiftY = ( 1.0 / abs( state.mappedImageSize[1] ) ) * shiftY ;
-	float zoomDependentShift = 1.05 - ( 2.0 / m_Zoom.currentZoom );
+	float zoomDependentShift = 1.0 - ( 2.0 / m_Zoom.currentZoom );
 	BOOST_FOREACH( StateMap::reference stateRef, m_StateValues ) {
-		stateRef.second.modelViewMatrix[12] = shiftX + zoomDependentShift * shiftX;
-		stateRef.second.modelViewMatrix[13] = shiftY + zoomDependentShift * shiftY;
+		stateRef.second.modelViewMatrix[12] = shiftX + zoomDependentShift * shiftX + 0.02 * shiftX;
+		stateRef.second.modelViewMatrix[13] = shiftY + zoomDependentShift * shiftY + 0.02 * shiftY;
 	}
 }
 
@@ -482,21 +482,24 @@ void QGLWidgetImplementation::wheelEvent( QWheelEvent *e )
 		zoomFactor = m_Zoom.zoomFactorOut;
 	} else if ( e->delta() > 0 ) { zoomFactor = m_Zoom.zoomFactorIn; }
 
-	m_Zoom.currentZoom *= zoomFactor;
-
-	if( m_Zoom.currentZoom >= 1 ) {
-		BOOST_FOREACH( StateMap::reference state, m_StateValues ) {
-			glMatrixMode( GL_PROJECTION );
-			glLoadMatrixd( state.second.projectionMatrix );
-			glScalef( zoomFactor, zoomFactor, 1 );
-			glGetDoublev( GL_PROJECTION_MATRIX, state.second.projectionMatrix );
-			glLoadIdentity();
+	if( m_Zoom.currentZoom < 32 ) {
+		m_Zoom.currentZoom *= zoomFactor;
+		if( m_Zoom.currentZoom >= 1 ) {
+			BOOST_FOREACH( StateMap::reference state, m_StateValues ) {
+				glMatrixMode( GL_PROJECTION );
+				glLoadMatrixd( state.second.projectionMatrix );
+				glScalef( zoomFactor, zoomFactor, 1 );
+				glGetDoublev( GL_PROJECTION_MATRIX, state.second.projectionMatrix );
+				glLoadIdentity();
+			}
+			zoomEventHappened = true;
+			updateScene();
+		} else {
+			m_Zoom.currentZoom = 1;
 		}
-		zoomEventHappened = true;
-		updateScene();
-	} else {
-		m_Zoom.currentZoom = 1;
 	}
+
+	
 
 }
 
