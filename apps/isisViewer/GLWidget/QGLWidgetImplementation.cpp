@@ -188,7 +188,7 @@ bool QGLWidgetImplementation::calculateTranslation(  )
 	float shiftY =  center.second - ( state.mappedVoxelCoords[1] < 0 ? abs( state.mappedImageSize[1] ) + state.mappedVoxelCoords[1] : state.mappedVoxelCoords[1] );
 	shiftX = ( 1.0 / abs( state.mappedImageSize[0] ) ) * shiftX ;
 	shiftY = ( 1.0 / abs( state.mappedImageSize[1] ) ) * shiftY ;
-	float zoomDependentShift = 1.0 - ( 2.0 / m_Zoom.currentZoom );
+	float zoomDependentShift = 1.05 - ( 2.0 / m_Zoom.currentZoom );
 	BOOST_FOREACH( StateMap::reference stateRef, m_StateValues ) {
 		stateRef.second.modelViewMatrix[12] = shiftX + zoomDependentShift * shiftX;
 		stateRef.second.modelViewMatrix[13] = shiftY + zoomDependentShift * shiftY;
