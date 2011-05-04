@@ -442,8 +442,8 @@ void QGLWidgetImplementation::mousePressEvent( QMouseEvent *e )
 bool QGLWidgetImplementation::isInViewport( size_t wx, size_t wy )
 {
 	GLint *viewport = m_StateValues[m_ViewerCore->getCurrentImage()].viewport;
-
-	if( ( static_cast<int>(wx) > viewport[0] && static_cast<int>(wx) < ( viewport[0] + viewport[2] ) ) && ( static_cast<int>(wy) > viewport[1] && static_cast<int>(wx) < ( viewport[1] + viewport[3] ) ) ) {
+	
+	if( ( static_cast<int>(wx) > viewport[0] && static_cast<int>(wx) < ( viewport[0] + viewport[2] ) ) && ( static_cast<int>(wy) > viewport[1] && static_cast<int>(wy) < ( viewport[1] + viewport[3] ) ) ) {
 		return true;
 	} else {
 		return false;
