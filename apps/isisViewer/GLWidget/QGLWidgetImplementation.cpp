@@ -285,13 +285,14 @@ void QGLWidgetImplementation::paintScene( const boost::shared_ptr<ImageHolder> i
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 	glLoadMatrixd( state.modelViewMatrix );
-
+	
 	if( image.get() == m_ViewerCore->getCurrentImage().get() ) {
 		glTranslatef( 0.0, 0.0, -0.1 );
-	}
-	if( image.get() == m_ViewerCore->getCurrentImage().get() && image->getImageState().imageType == ImageHolder::z_map) {
+	} 
+	if( image->getImageState().imageType == ImageHolder::z_map ) {
 		glTranslatef( 0.0, 0.0, -0.2 );
 	}
+	
 	glMatrixMode( GL_TEXTURE );
 	glLoadIdentity();
 	glLoadMatrixd( state.textureMatrix );
