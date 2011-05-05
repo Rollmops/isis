@@ -262,7 +262,7 @@ bool QGLWidgetImplementation::lookAtVoxel( const boost::shared_ptr<ImageHolder> 
 
 void QGLWidgetImplementation::paintScene( const boost::shared_ptr<ImageHolder> image )
 {
-
+	glEnable(GL_BLEND);
 	const State &state = m_StateValues[image];
 
 	double scaling, bias;
@@ -289,7 +289,9 @@ void QGLWidgetImplementation::paintScene( const boost::shared_ptr<ImageHolder> i
 	if( image.get() == m_ViewerCore->getCurrentImage().get() ) {
 		glTranslatef( 0.0, 0.0, -0.1 );
 	}
-
+	if( image.get() == m_ViewerCore->getCurrentImage().get() && image->getImageState().imageType == ImageHolder::z_map) {
+		glTranslatef( 0.0, 0.0, -0.2 );
+	}
 	glMatrixMode( GL_TEXTURE );
 	glLoadIdentity();
 	glLoadMatrixd( state.textureMatrix );
@@ -344,7 +346,7 @@ void QGLWidgetImplementation::paintScene( const boost::shared_ptr<ImageHolder> i
 void QGLWidgetImplementation::paintCrosshair()
 {
 	//paint crosshair
-	glDisable( GL_BLEND );
+// 	glDisable( GL_BLEND );
 	const State &currentState = m_StateValues.at( m_ViewerCore->getCurrentImage() );
 	glColor4f( 1, 1, 1, 1 );
 	glLineWidth( 1.0 );

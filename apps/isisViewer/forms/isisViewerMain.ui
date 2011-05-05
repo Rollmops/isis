@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>911</width>
-    <height>818</height>
+    <width>923</width>
+    <height>815</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,8 +117,8 @@
           <widget class="QLabel" name="label">
            <property name="geometry">
             <rect>
-             <x>9</x>
-             <y>67</y>
+             <x>100</x>
+             <y>90</y>
              <width>54</width>
              <height>18</height>
             </rect>
@@ -187,8 +187,8 @@
           <widget class="QLabel" name="pxlIntensityContainer">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>10</y>
+             <x>100</x>
+             <y>110</y>
              <width>231</width>
              <height>20</height>
             </rect>
@@ -197,65 +197,12 @@
             <string/>
            </property>
           </widget>
-          <widget class="QSlider" name="upperThreshold">
-           <property name="geometry">
-            <rect>
-             <x>250</x>
-             <y>10</y>
-             <width>19</width>
-             <height>211</height>
-            </rect>
-           </property>
-           <property name="maximum">
-            <number>999</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="pageStep">
-            <number>10</number>
-           </property>
-           <property name="value">
-            <number>999</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="invertedAppearance">
-            <bool>false</bool>
-           </property>
-           <property name="invertedControls">
-            <bool>false</bool>
-           </property>
-          </widget>
-          <widget class="QSlider" name="lowerThreshold">
-           <property name="geometry">
-            <rect>
-             <x>270</x>
-             <y>10</y>
-             <width>20</width>
-             <height>211</height>
-            </rect>
-           </property>
-           <property name="maximum">
-            <number>999</number>
-           </property>
-           <property name="pageStep">
-            <number>10</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-          </widget>
           <widget class="QLabel" name="maxLabel">
            <property name="geometry">
             <rect>
-             <x>290</x>
-             <y>8</y>
-             <width>91</width>
+             <x>10</x>
+             <y>30</y>
+             <width>71</width>
              <height>20</height>
             </rect>
            </property>
@@ -266,9 +213,9 @@
           <widget class="QLabel" name="minLabel">
            <property name="geometry">
             <rect>
-             <x>290</x>
-             <y>200</y>
-             <width>91</width>
+             <x>0</x>
+             <y>10</y>
+             <width>81</width>
              <height>21</height>
             </rect>
            </property>
@@ -309,6 +256,79 @@
             <string>ZMap-Interpolation</string>
            </property>
           </widget>
+          <widget class="QSlider" name="lowerThreshold">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>10</y>
+             <width>301</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>999</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>true</bool>
+           </property>
+           <property name="invertedControls">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QSlider" name="upperThreshold">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>30</y>
+             <width>301</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>999</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_4">
+           <property name="geometry">
+            <rect>
+             <x>385</x>
+             <y>11</y>
+             <width>16</width>
+             <height>18</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_5">
+           <property name="geometry">
+            <rect>
+             <x>385</x>
+             <y>31</y>
+             <width>16</width>
+             <height>18</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -322,7 +342,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>911</width>
+     <width>923</width>
      <height>25</height>
     </rect>
    </property>

@@ -31,6 +31,7 @@ public:
 	struct ImageState {
 		ImageType imageType;
 		std::pair<double, double> threshold;
+		std::pair<double, double> zmapThreshold;
 		float opacity;
 		bool visible;
 	};

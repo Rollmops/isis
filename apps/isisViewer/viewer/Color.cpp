@@ -41,7 +41,7 @@ std::vector< util::fvector4 > Color::getColorGradientRGB( const Color::LookUpTab
 	{
 		float stepLength = 512.0 / numberOfEntries;
 		for ( float step = 255; step >= 0; step -= stepLength ) {
-			int rg = 255 - util::Value<float>( step ).as<int>();
+			int rg = util::Value<float>( step ).as<int>();
 			retRGBGradient.push_back( util::fvector4( rg, rg, 255 ) );
 		}
 		for ( float step = 0; step <= 255; step += stepLength ) {
@@ -49,7 +49,7 @@ std::vector< util::fvector4 > Color::getColorGradientRGB( const Color::LookUpTab
 			if( step < 127 ) {
 				retRGBGradient.push_back( util::fvector4( 255, gb * 2, 0 ) );
 			} else {
-				retRGBGradient.push_back( util::fvector4( 255, 255, (gb-127)*2 ) );
+				retRGBGradient.push_back( util::fvector4( 255, 255, (gb-127) * 2 ) );
 			}
 		}
 		return retRGBGradient;

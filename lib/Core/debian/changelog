@@ -1,3 +1,11 @@
+isis (0.3.1gite7210b-0) stable; urgency=low
+
+    * Fix a bug which caused a conversion from float to integer drop the
+      offset, and thus the negative values in the source
+
+ -- ISIS Group (The friendly isis team) <gr_isis@cbs.mpg.de>  Thu, 5 May 2011 12:00:00 +0100
+
+
 isis (0.2.0git312-0) stable; urgency=low
 
     * Initial Debian packaging attempt. This is the first version of

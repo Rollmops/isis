@@ -72,13 +72,21 @@ void MainWindow::contextMenuImageStack( QPoint position )
 void MainWindow::triggeredMakeCurrentImage( bool triggered )
 {
 	m_ViewerCore->setCurrentImage( m_ViewerCore->getDataContainer().at( ui.imageStack->currentItem()->text().toStdString() ) );
-	double range = m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>();
-	ui.lowerThreshold->setSliderPosition(
-		1000.0 / range *
-		( m_ViewerCore->getCurrentImage()->getImageState().threshold.first - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() ) );
-	ui.upperThreshold->setSliderPosition(
-		1000.0 / range *
-		( m_ViewerCore->getCurrentImage()->getImageState().threshold.second - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() ) );
+	if(m_ViewerCore->getCurrentImage()->getImageState().imageType == ImageHolder::z_map)
+	{
+		ui.lowerThreshold->setSliderPosition( 1000.0 / m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() *
+			( m_ViewerCore->getCurrentImage()->getImageState().threshold.first  ) );
+		ui.upperThreshold->setSliderPosition( 1000.0 / m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() *
+			( m_ViewerCore->getCurrentImage()->getImageState().threshold.second ) );
+	} else {
+			double range = m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>();
+		ui.lowerThreshold->setSliderPosition( 1000.0 / range *
+			( m_ViewerCore->getCurrentImage()->getImageState().threshold.first - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() ) );
+		ui.upperThreshold->setSliderPosition( 1000.0 / range *
+			( m_ViewerCore->getCurrentImage()->getImageState().threshold.second - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() ) );
+	}
+		
+	
 	imagesChanged( m_ViewerCore->getDataContainer() );
 	m_ViewerCore->updateScene();
 }
@@ -211,15 +219,27 @@ void MainWindow::exitProgram()
 
 void MainWindow::lowerThresholdChanged( int lowerThreshold )
 {
-	double range = m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>();
-	m_ViewerCore->getCurrentImage()->setLowerThreshold( ( range / 1000 ) * ( lowerThreshold  ) + m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() );
+	
+	if(m_ViewerCore->getCurrentImage()->getImageState().imageType == ImageHolder::z_map)
+	{
+		m_ViewerCore->getCurrentImage()->setLowerThreshold( ( m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() / 1000 ) * ( lowerThreshold  ) );
+	} else {
+		double range = m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>();
+		m_ViewerCore->getCurrentImage()->setLowerThreshold( ( range / 1000 ) * ( lowerThreshold  ) + m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() );
+	}
 	m_ViewerCore->updateScene();
 }
 
 void MainWindow::upperThresholdChanged( int upperThreshold )
 {
-	double range = m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>();
-	m_ViewerCore->getCurrentImage()->setUpperThreshold( ( range / 1000 ) * ( upperThreshold + 1 )  + m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() );
+	if(m_ViewerCore->getCurrentImage()->getImageState().imageType == ImageHolder::z_map)
+	{
+		m_ViewerCore->getCurrentImage()->setUpperThreshold( (  m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() / 1000 ) * ( upperThreshold + 1 ) );
+	} else {
+		double range = m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>() - m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>();
+		m_ViewerCore->getCurrentImage()->setUpperThreshold( ( range / 1000 ) * ( upperThreshold + 1 )  + m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>() );
+	}
+	
 	m_ViewerCore->updateScene();
 
 }

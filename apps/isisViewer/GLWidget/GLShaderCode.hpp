@@ -1,4 +1,5 @@
 #define STRINGIFY(A) #A
+#include <boost/concept_check.hpp>
 
 std::string colormap_shader_code = STRINGIFY(
 									   uniform sampler3D imageTexture;
@@ -13,24 +14,22 @@ std::string colormap_shader_code = STRINGIFY(
 									   uniform float killZeros;
 									   void main ()
 {
-	float err = 0.015;
+	float err = 0.05;
 	float range = max - min;
 	float i = texture3D( imageTexture, gl_TexCoord[0].xyz ).r;
-	if(i<=0) {
-		err *= -1;
-	}
-	vec4 colorLut = texture1D( lut, i-err );
+	vec4 colorLut = texture1D( lut, i);
 	colorLut.a = opacity;
 	float inormed = ( i * range ) + min;
-
-	if( inormed > upper_threshold || inormed < lower_threshold )  {
+	if( inormed > 0 + err && inormed < upper_threshold ) {
 		colorLut.a = 0;
 	}
-
-	if( killZeros == 1 && ( inormed > -err && inormed < err ) ) {
+	if( inormed < 0 - err && inormed > lower_threshold ) {
 		colorLut.a = 0;
 	}
-
+	
+	if( killZeros == 1 && i < 0.5 + err && i > 0.5 - err ) {
+		colorLut.a = 0;
+	}
 	gl_FragColor = ( colorLut + bias / range ) * scaling;
 }
 								   );
