@@ -85,7 +85,6 @@ boost::numeric::ublas::matrix< float > ImageHolder::getImageOrientation( bool tr
 			retMatrix( 2, i ) = sliceVec[i];
 		}
 	}
-
 	return retMatrix;
 }
 

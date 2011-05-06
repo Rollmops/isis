@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <DataStorage/chunk.hpp>
+#include <DataStorage/image.hpp>
 #include <boost/shared_ptr.hpp>
 #include <DataStorage/common.hpp>
 #include <CoreUtils/common.hpp>
@@ -30,6 +31,8 @@ template<typename TYPE>
 TYPE roundNumber( TYPE number, unsigned  short placesOfDec ) {
 	return floor(number * pow(10., placesOfDec) + .5) / pow(10., placesOfDec);
 }
+
+void setOrientationToIdentity( data::Image &image );
 
 typedef ViewerLog Runtime;
 typedef ViewerDebug Debug;

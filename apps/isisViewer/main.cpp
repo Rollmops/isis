@@ -25,10 +25,10 @@ int main( int argc, char *argv[] )
 	app.parameters["type"] = image_types;
 	app.parameters["type"].needed() = false;
 	app.parameters["type"].setDescription( "The type as what the image should be interpreted." );
-	app.parameters["adopt"] = bool();
-	app.parameters["adopt"] = false;
-	app.parameters["adopt"].needed() = false;
-	app.parameters["adopt"].setDescription( "If the zmap has wrong orienation information this option can be used to adopt the orienation information of the anatomical image" );
+	app.parameters["identity"] = bool();
+	app.parameters["identity"] = false;
+	app.parameters["identity"].needed() = false;
+	app.parameters["identity"].setDescription( "Sets the orientation of all images to identity and index origin to 0" );
 	app.parameters["dViewer"] = dbg_levels;
 	app.parameters["dViewer"].setDescription( "Debugging level for the Viewer module" );
 	app.parameters["dViewer"].hidden() = true;
@@ -48,14 +48,20 @@ int main( int argc, char *argv[] )
 	//load the anatomical images
 	BOOST_FOREACH ( isis::util::slist::const_reference fileName, fileList ) {
 		std::list< isis::data::Image > tmpList = isis::data::IOFactory::load( fileName, app.parameters["rf"].toString() );
-		BOOST_FOREACH( std::list< isis::data::Image >::const_reference imageRef, tmpList ) {
+		BOOST_FOREACH( std::list< isis::data::Image >::reference imageRef, tmpList ) {
+			if(app.parameters["identity"] ) {
+				setOrientationToIdentity(imageRef);
+			}
 			imgList.push_back( imageRef );
 		}
 	}
 	//load the zmap images
 	BOOST_FOREACH ( isis::util::slist::const_reference fileName, zmapFileList ) {
 		std::list< isis::data::Image > tmpList = isis::data::IOFactory::load( fileName, app.parameters["rf"].toString() );
-		BOOST_FOREACH( std::list< isis::data::Image >::const_reference imageRef, tmpList ) {
+		BOOST_FOREACH( std::list< isis::data::Image >::reference imageRef, tmpList ) {
+			if(app.parameters["identity"]) {
+				setOrientationToIdentity(imageRef);
+			}
 			zImgList.push_back( imageRef );
 		}
 	}
@@ -72,7 +78,6 @@ int main( int argc, char *argv[] )
 	if( app.parameters["z"].isSet() ) {
 		core->addImageList( zImgList, ImageHolder::z_map );
 	}
-	core->setAllImagesToIdentity( app.parameters["adopt"] );
 	isisViewerMainWindow.show();
 	return app.getQApplication().exec();
 }

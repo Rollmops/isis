@@ -12,15 +12,6 @@ ViewerCoreBase::ViewerCoreBase( )
 {
 }
 
-bool ViewerCoreBase::setAllImagesToIdentity(bool identity)
-{
-#warning implement setAllImagesToIdentity
-	BOOST_FOREACH( DataContainer::reference images, m_DataContainer ) {
-		
-	}
-}
-
-
 void ViewerCoreBase::addImageList( const std::list< data::Image > imageList, const ImageHolder::ImageType &imageType )
 {
 	if( !imageList.empty() ) {
