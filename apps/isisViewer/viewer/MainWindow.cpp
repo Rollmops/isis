@@ -149,13 +149,7 @@ void MainWindow::imagesChanged( DataContainer images )
 	BOOST_FOREACH( DataContainer::const_reference imageRef, images ) {
 		QListWidgetItem *item = new QListWidgetItem;
 		QString sD = imageRef.second->getPropMap().getPropertyAs<std::string>( "sequenceDescription" ).c_str();
-
-		if ( !sD.toStdString().empty() ) {
-			item->setText( QString( imageRef.second->getFileNames().front().c_str() ) );
-		} else {
-			item->setText( QString( imageRef.second->getFileNames().front().c_str() ) );
-		}
-
+		item->setText( QString( imageRef.second->getFileNames().front().c_str() ) );
 		item->setFlags( Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable );
 
 		if( imageRef.second->getImageState().visible ) {
@@ -170,8 +164,10 @@ void MainWindow::imagesChanged( DataContainer images )
 
 		ui.imageStack->addItem( item );
 	}
-	ui.minLabel->setText( QString( m_ViewerCore->getCurrentImage()->getMinMax().first.toString().c_str() ) );
-	ui.maxLabel->setText( QString( m_ViewerCore->getCurrentImage()->getMinMax().second.toString().c_str() ) );
+	double min = roundNumber<double>( m_ViewerCore->getCurrentImage()->getMinMax().first->as<double>(), 2 );
+	double max = roundNumber<double>( m_ViewerCore->getCurrentImage()->getMinMax().second->as<double>(), 2 );
+	ui.minLabel->setText( QString::number( min ) );
+	ui.maxLabel->setText( QString::number( max ) );
 }
 
 void MainWindow::openImage()

@@ -31,7 +31,7 @@ public:
 	struct ImageState {
 		ImageType imageType;
 		std::pair<double, double> threshold;
-		std::pair<double, double> zmapThreshold;
+		size_t stackPosition;
 		float opacity;
 		bool visible;
 	};
@@ -112,6 +112,7 @@ public:
 	void setVisible( bool v ) { m_ImageState.visible = v; }
 	void setLowerThreshold( double lowerThreshold ) { m_ImageState.threshold.first = lowerThreshold ; }
 	void setUpperThreshold( double upperThreshold ) { m_ImageState.threshold.second = upperThreshold ; }
+	void setStackPosition( size_t stackPosition ) { m_ImageState.stackPosition = stackPosition; }
 	void setOpacity( float opacity ) { m_ImageState.opacity = opacity; }
 	void setImageType( ImageType imageType ) { m_ImageState.imageType = imageType; }
 

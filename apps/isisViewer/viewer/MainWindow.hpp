@@ -11,6 +11,7 @@
 #include "MainWindowBase.hpp"
 #include "QViewerCore.hpp"
 #include "QGLWidgetImplementation.hpp"
+#include <CoreUtils/type.hpp>
 
 namespace isis
 {
@@ -55,9 +56,8 @@ private:
 	QAction *actionAsZMap;
 
 	template<typename TYPE> void displayIntensity( util::ivector4 coords ) {
-		const util::Value<TYPE> value( m_ViewerCore->getCurrentImage()->getImage()->voxel<TYPE>( coords[0], coords[1], coords[2], coords[3] ) );
-
-		ui.pxlIntensityContainer->setText( value.toString().c_str() );
+		util::Value<TYPE> vIntensity (m_ViewerCore->getCurrentImage()->getImage()->voxel<TYPE>( coords[0], coords[1], coords[2], coords[3] ) );
+		ui.pxlIntensityContainer->setText( QString::number( roundNumber<double>( vIntensity, 2 ) ) );
 
 
 	}

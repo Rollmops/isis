@@ -189,7 +189,7 @@
             <rect>
              <x>100</x>
              <y>110</y>
-             <width>231</width>
+             <width>111</width>
              <height>20</height>
             </rect>
            </property>
@@ -202,25 +202,31 @@
             <rect>
              <x>10</x>
              <y>30</y>
-             <width>71</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-          <widget class="QLabel" name="minLabel">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>10</y>
-             <width>81</width>
+             <width>41</width>
              <height>21</height>
             </rect>
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+          <widget class="QLabel" name="minLabel">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>41</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
           <widget class="QComboBox" name="interpolationType">
@@ -259,9 +265,9 @@
           <widget class="QSlider" name="lowerThreshold">
            <property name="geometry">
             <rect>
-             <x>80</x>
+             <x>60</x>
              <y>10</y>
-             <width>301</width>
+             <width>321</width>
              <height>20</height>
             </rect>
            </property>
@@ -281,9 +287,9 @@
           <widget class="QSlider" name="upperThreshold">
            <property name="geometry">
             <rect>
-             <x>80</x>
+             <x>60</x>
              <y>30</y>
-             <width>301</width>
+             <width>321</width>
              <height>20</height>
             </rect>
            </property>
