@@ -485,7 +485,7 @@ void QGLWidgetImplementation::wheelEvent( QWheelEvent *e )
 		zoomFactor = m_Zoom.zoomFactorOut;
 	} else if ( e->delta() > 0 ) { zoomFactor = m_Zoom.zoomFactorIn; }
 
-	if( m_Zoom.currentZoom < 32 ) {
+	if( m_Zoom.currentZoom * zoomFactor < 32 ) {
 		m_Zoom.currentZoom *= zoomFactor;
 		if( m_Zoom.currentZoom >= 1 ) {
 			BOOST_FOREACH( StateMap::reference state, m_StateValues ) {
