@@ -1,3 +1,37 @@
+isis (0.3.2gitg1cf9c83-0) stable; urgency=low
+
+   * Removed all debian packaging control files. They can be found at the
+     'debian' branch.
+
+   * Fixed linker bug with static core library. Now binary switch flips
+     static/dynamic build.
+
+   * add uninstall target 
+
+   * removed isisViewer. The viewer is now in a separate repository 
+
+   * add null plugin dialect for huge images (50mb, 500mb 1000mb and 2000mb),
+
+   * fixed bug in application which caused omiting boolean parameter in help
+     view
+
+   * added optimized getMinMax for (u)int(8,16,32)_t 
+
+   * parameter names now can be specified only by a substring. Has to be
+     unambiguous.
+
+   * move VoxelOp and ChunkOp into namespace isis::data 
+
+   * added ValuePtr-constructor to directly allocate memory 
+
+   * remove obsolete ValuePtr::allocate 
+
+   * swapAlong is now in data::Chunk and optimized
+
+   * support conversion from boolean to numeric types (true=>1,false=>0)
+
+ -- ISIS Group (The friendly isis team) <gr_isis@cbs.mpg.de>  Thu, 20 Jun 2011 11:49:35 +0200
+
 isis (0.3.1gite7210b-0) stable; urgency=low
 
     * major changes in the project structure. All former ISIS subprojects are now part of an overall ISIS project.
