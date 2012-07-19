@@ -18,11 +18,18 @@ namespace test
 /* create an image */
 BOOST_AUTO_TEST_CASE ( chunk_init_test )
 {
+	const char *needed[] = {"indexOrigin", "acquisitionNumber", "voxelSize", "rowVec", "columnVec"};
 	ENABLE_LOG( CoreLog, util::DefaultMsgPrint, warning );
 	ENABLE_LOG( CoreDebug, util::DefaultMsgPrint, warning );
 	ENABLE_LOG( DataLog, util::DefaultMsgPrint, warning );
 	ENABLE_LOG( DataDebug, util::DefaultMsgPrint, warning );
 	data::MemChunk<float> ch( 4, 3, 2, 1 );
+
+	BOOST_FOREACH( const char * str, needed ) {
+		BOOST_CHECK( ch.propertyValue( str ).needed() );
+	}
+
+
 	BOOST_CHECK_EQUAL( ch.getVolume(), 1 * 2 * 3 * 4 );
 	BOOST_CHECK_EQUAL( ch.getDimSize( data::rowDim ), 4 );
 	BOOST_CHECK_EQUAL( ch.getDimSize( data::columnDim ), 3 );
@@ -139,12 +146,12 @@ BOOST_AUTO_TEST_CASE ( chunk_property_test )
 	BOOST_CHECK( !ch.isValid() );
 	BOOST_CHECK( !ch.hasProperty( "indexOrigin" ) );
 	//with a position and an orientation its valid
-	util::fvector4 pos( 1, 1, 1 );
+	util::fvector3 pos( 1, 1, 1 );
 	ch.setPropertyAs( "indexOrigin", pos );
 	BOOST_CHECK( !ch.isValid() );
 	ch.setPropertyAs<uint32_t>( "acquisitionNumber", 0 );
 	BOOST_CHECK( !ch.isValid() );
-	ch.setPropertyAs( "voxelSize", util::fvector4( 1, 1, 1, 0 ) );
+	ch.setPropertyAs( "voxelSize", util::fvector3( 1, 1, 1 ) );
 	BOOST_CHECK( !ch.isValid() );
 	ch.setPropertyAs( "rowVec", pos );
 	BOOST_CHECK( !ch.isValid() );
@@ -153,7 +160,7 @@ BOOST_AUTO_TEST_CASE ( chunk_property_test )
 	//properties shall not be case sensitive
 	BOOST_CHECK( ch.hasProperty( "indexorigin" ) );
 	// and of course the property shall be what it was set to
-	BOOST_CHECK_EQUAL( pos, ch.getPropertyAs<util::fvector4>( "indexOrigin" ) );
+	BOOST_CHECK_EQUAL( pos, ch.getPropertyAs<util::fvector3>( "indexOrigin" ) );
 }
 
 BOOST_AUTO_TEST_CASE ( chunk_data_test1 )//Access Chunk elements via dimensional index
@@ -223,20 +230,40 @@ BOOST_AUTO_TEST_CASE ( chunk_copy_test )//Copy chunks
 	for ( size_t i = 0; i < ch1.getVolume(); i++ )
 		ch1.asValueArray<float>()[i] = i;
 
+	data::scaling_pair no_scale( util::Value<int>( 1 ), util::Value<int>( 0 ) );
+
 	data::Chunk ch2 = ch1;//This shall clone the underlying ValueArray-Object
-	//but it should of course of the same type and contain the same data
-	BOOST_CHECK( ch1.getValueArrayBase().isSameType( ch2.getValueArrayBase() ) );
+	data::Chunk copyF = ch2.copyByID(); // this shall copy as the same as ch2 (float)
+	data::Chunk copyI = ch2.copyByID( data::ValueArray<uint32_t>::staticID, no_scale ); // this shall copy as unsigned int (we need to set scale because float=>int always scales up)
+
+	//but it should of course be of the same type and contain the same data
 	BOOST_CHECK( ch1.getValueArrayBase().is<float>() );
+	BOOST_CHECK( ch1.getValueArrayBase().isSameType( ch2.getValueArrayBase() ) );
+	BOOST_CHECK( copyF.getValueArrayBase().isSameType( ch2.getValueArrayBase() ) );
+	BOOST_CHECK( copyI.getValueArrayBase().is<uint32_t>() );
+
 	BOOST_CHECK_EQUAL( ch1.getVolume(), ch2.getVolume() );
+	BOOST_CHECK_EQUAL( ch1.getVolume(), copyF.getVolume() );
+	BOOST_CHECK_EQUAL( ch1.getVolume(), copyI.getVolume() );
 
-	for ( size_t i = 0; i < ch2.getVolume(); i++ )
-		BOOST_CHECK_EQUAL( ch2.getValueArray<float>()[i], i );
-
-	//cloning chunks is a cheap copy, thus any copied chunk shares data
+	// all entries should be the same as for ch1
 	for ( size_t i = 0; i < ch2.getVolume(); i++ ) {
+		BOOST_CHECK_EQUAL( ch2.getValueArray<float>()[i], i );
+		BOOST_CHECK_EQUAL( copyF.getValueArray<float>()[i], i );
+		BOOST_CHECK_EQUAL( copyI.getValueArray<uint32_t>()[i], i );
+	}
+
+
+	for ( size_t i = 0; i < ch2.getVolume(); i++ ) {
+		//cloning chunks is a cheap copy, thus any copied chunk shares data
 		ch1.asValueArray<float>()[i] = 0;
 		BOOST_CHECK_EQUAL( ch2.getValueArray<float>()[i], 0 );
+		// but deep copies should not be changed
+		BOOST_CHECK_EQUAL( copyF.getValueArray<float>()[i], i );
+		BOOST_CHECK_EQUAL( copyI.getValueArray<uint32_t>()[i], i );
 	}
+
+
 }
 BOOST_AUTO_TEST_CASE ( memchunk_copy_test )//Copy chunks
 {
@@ -246,7 +273,7 @@ BOOST_AUTO_TEST_CASE ( memchunk_copy_test )//Copy chunks
 		   boost::numeric::RoundEven<double>
 		   > converter;
 	data::MemChunk<float> ch1( 4, 3, 2, 1 );
-	ch1.setPropertyAs( "indexOrigin", util::fvector4( 1, 2, 3, 4 ) );
+	ch1.setPropertyAs( "indexOrigin", util::fvector3( 1, 2, 3 ) );
 
 	for ( size_t i = 0; i < ch1.getVolume(); i++ )
 		ch1.asValueArray<float>()[i] = i;
@@ -283,11 +310,11 @@ BOOST_AUTO_TEST_CASE ( memchunk_copy_test )//Copy chunks
 BOOST_AUTO_TEST_CASE ( chunk_splice_test )//Copy chunks
 {
 	data::MemChunk<float> ch1( 3, 3, 3 );
-	ch1.setPropertyAs( "indexOrigin", util::fvector4( 1, 1, 1 ) );
-	ch1.setPropertyAs( "rowVec", util::fvector4( 1, 0, 0 ) );
-	ch1.setPropertyAs( "columnVec", util::fvector4( 0, 1, 0 ) );
-	ch1.setPropertyAs( "voxelSize", util::fvector4( 1, 1, 1 ) );
-	ch1.setPropertyAs( "voxelGap", util::fvector4( 1, 1, 1 ) );
+	ch1.setPropertyAs( "indexOrigin", util::fvector3( 1, 1, 1 ) );
+	ch1.setPropertyAs( "rowVec", util::fvector3( 1, 0, 0 ) );
+	ch1.setPropertyAs( "columnVec", util::fvector3( 0, 1, 0 ) );
+	ch1.setPropertyAs( "voxelSize", util::fvector3( 1, 1, 1 ) );
+	ch1.setPropertyAs( "voxelGap", util::fvector3( 1, 1, 1 ) );
 	ch1.setPropertyAs<uint32_t>( "acquisitionNumber", 0 );
 
 	for ( size_t i = 0; i < ch1.getVolume(); i++ )
@@ -297,7 +324,7 @@ BOOST_AUTO_TEST_CASE ( chunk_splice_test )//Copy chunks
 	unsigned short cnt = 1;
 	BOOST_CHECK_EQUAL( splices.size(), 3 );
 	BOOST_FOREACH( const data::Chunk & ref, splices ) {
-		BOOST_CHECK_EQUAL( ref.getPropertyAs<util::fvector4>( "indexOrigin" ), util::fvector4( 1, 1, cnt ) );
+		BOOST_CHECK_EQUAL( ref.getPropertyAs<util::fvector3>( "indexOrigin" ), util::fvector3( 1, 1, cnt ) );
 		cnt += 2;
 	}
 }

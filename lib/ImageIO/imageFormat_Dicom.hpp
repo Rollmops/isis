@@ -69,15 +69,14 @@ public:
 	static const char unknownTagName[];
 	static void parseCSA( DcmElement *elem, isis::util::PropertyMap &map, const util::istring &dialect );
 	static void parseScalar( DcmElement *elem, const util::PropertyMap::PropPath &name, util::PropertyMap &map );
-	static void parseVector( DcmElement *elem, const util::PropertyMap::PropPath &name, isis::util::PropertyMap &map );
 	static void parseList( DcmElement *elem, const util::PropertyMap::PropPath &name, isis::util::PropertyMap &map );
 	void dcmObject2PropMap( DcmObject *master_obj, isis::util::PropertyMap &map, const util::istring &dialect )const;
-	static void sanitise( util::PropertyMap &object, std::string dialect );
+	static void sanitise( util::PropertyMap &object, util::istring dialect );
 	std::string getName()const;
 	util::istring dialects( const std::string &filename )const;
 
-	int load( std::list<data::Chunk> &chunks, const std::string &filename, const util::istring &dialect ) throw( std::runtime_error & );
-	void write( const data::Image &image, const std::string &filename, const util::istring &dialect ) throw( std::runtime_error & );
+	int load( std::list<data::Chunk> &chunks, const std::string &filename, const util::istring &dialect, boost::shared_ptr<util::ProgressFeedback> progress ) throw( std::runtime_error & );
+	void write( const data::Image &image,     const std::string &filename, const util::istring &dialect, boost::shared_ptr<util::ProgressFeedback> progress ) throw( std::runtime_error & );
 
 	bool tainted()const;
 };

@@ -41,7 +41,7 @@ public:
 		return "SiemensTcpIp";
 	}
 
-	int load ( std::list<data::Chunk> &chunks, const std::string &filename, const util::istring &dialect )  throw( std::runtime_error & ) {
+	int load ( std::list<data::Chunk> &chunks, const std::string &filename, const util::istring &dialect, boost::shared_ptr<util::ProgressFeedback> progress )  throw( std::runtime_error & ) {
 
 
 		printf( "IMAGE: %d\n", image_counter );
@@ -213,7 +213,7 @@ public:
 					 * get each slice position from header
 					 */
 					std::string slice_pos = "slice_position_0";
-					util::fvector4 slice_pos_vec = getVectorFromString( getStringFromHeader( slice_pos, header ) ); //(val1, val2, val3);
+					util::fvector3 slice_pos_vec = getVectorFromString( getStringFromHeader( slice_pos, header ) ); //(val1, val2, val3);
 					//*********
 
 					// now, create a real chunk in memory and convert it to float data
@@ -288,7 +288,8 @@ public:
 		return 0;
 	}
 
-	void write( const data::Image &image, const std::string &filename, const util::istring &dialect )  throw( std::runtime_error & ) {
+	void write( const data::Image &image, const std::string &filename, const util::istring &dialect, boost::shared_ptr<util::ProgressFeedback> progress )  throw( std::runtime_error & ) {
+		throwGenericError( "Writing TCP/IP is not supportet" );
 	}
 	bool tainted()const {return false;}//internal plugins are not tainted
 
@@ -328,13 +329,13 @@ private:
 		return propString;
 	}
 
-	util::fvector4 getVectorFromString( std::string propName ) {
+	util::fvector3 getVectorFromString( std::string propName ) {
 		size_t indexK1 = propName.find( ",", 0, 1 );
 		size_t indexK2 = propName.find( ",", indexK1 + 1, 1 );
 		double_t val1 = atof( propName.substr( 0, indexK1 ).c_str() );
 		double_t val2 = atof( propName.substr( indexK1 + 1, indexK2 - indexK1 ).c_str() );
 		double_t val3 = atof( propName.substr( indexK2 + 1, propName.length() - indexK2 ).c_str() );
-		return util::fvector4( val1, val2, val3 );
+		return util::fvector3( val1, val2, val3 );
 	}
 	char   buffer[32768];
 };

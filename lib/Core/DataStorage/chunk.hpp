@@ -37,7 +37,6 @@ namespace _internal
 class ChunkBase : public NDimensional<4>, public util::PropertyMap
 {
 protected:
-	static const char *neededProperties;
 	ChunkBase() {}; //do not use this
 public:
 	//  static const dimensions dimension[n_dims]={rowDim,columnDim,sliceDim,timeDim};
@@ -45,6 +44,7 @@ public:
 
 	ChunkBase( size_t nrOfColumns, size_t nrOfRows, size_t nrOfSlices, size_t nrOfTimesteps );
 	virtual ~ChunkBase(); //needed to make it polymorphic
+	static const char *neededProperties;
 };
 }
 /// @endcond _internal
@@ -197,6 +197,14 @@ public:
 	template<typename T> bool copyToMem( T *dst, size_t len, scaling_pair scaling = scaling_pair() )const {
 		return getValueArrayBase().copyToMem<T>( dst, len,  scaling ); // use copyToMem of ValueArrayBase
 	}
+	/**
+	 * Create a new Chunk of the requested type and copy all voxel data of the chunk into it.
+	 * If neccessary a conversion into the requested type is done using the given scale.
+	 * \param ID the ID of the requested type (type of the source is used if not given)
+	 * \param scaling the scaling to be used when converting the data (will be determined automatically if not given)
+	 * \return a new deep copied Chunk of the same size
+	 */
+	Chunk copyByID( unsigned short ID = 0, scaling_pair scaling = scaling_pair() )const;
 
 	///get the scaling (and offset) which would be used in an conversion to the given type
 	scaling_pair getScalingTo( unsigned short typeID, autoscaleOption scaleopt = autoscale )const;
@@ -249,14 +257,13 @@ public:
 	 * with caution!
 	 */
 	bool transformCoords( boost::numeric::ublas::matrix<float> transform_matrix, bool transformCenterIsImageCenter = false ) {
-		if( hasProperty( "rowVec" ) && hasProperty( "columnVec" ) && hasProperty( "sliceVec" )
-			&& hasProperty( "voxelSize" ) && hasProperty( "indexOrigin" ) ) {
-			if( !isis::data::_internal::transformCoords( *this, getSizeAsVector(), transform_matrix, transformCenterIsImageCenter ) ) {
-				LOG( Runtime, error ) << "Error during transforming the coords of the chunk.";
-				return false;
-			}
+		LOG_IF(  !hasProperty( "rowVec" ) || !hasProperty( "columnVec" ) || !hasProperty( "sliceVec" )
+				 || !hasProperty( "voxelSize" ) || !hasProperty( "indexOrigin" ), Debug, error )
+				<< "Cannot do Chunk::transformCoords because of missing properties!";
 
-			return true;
+		if( !isis::data::_internal::transformCoords( *this, getSizeAsVector(), transform_matrix, transformCenterIsImageCenter ) ) {
+			LOG( Runtime, error ) << "Error during transforming the coords of the chunk.";
+			return false;
 		}
 
 		return true;

@@ -95,20 +95,33 @@ private:
 	// internal tool-backends
 	/////////////////////////////////////////////////////////////////////////////////////////
 	/// internal recursion-function for join
-	void joinTree( const isis::util::PropertyMap &other, bool overwrite, KeyType prefix, PropertyMap::KeyList &rejects );
+	void joinTree( const PropertyMap &other, bool overwrite, KeyType prefix, KeyList &rejects );
 	/// internal recursion-function for diff
 	void diffTree( const PropertyMap &other, PropertyMap::DiffMap &ret, KeyType prefix ) const;
 
-	static mapped_type &fetchEntry( util::PropertyMap &root, const propPathIterator at, const propPathIterator pathEnd );
+	static mapped_type &fetchEntry( PropertyMap &root, const propPathIterator at, const propPathIterator pathEnd );
 	mapped_type &fetchEntry( const PropPath &path );
 
 	static const mapped_type *findEntry( const util::PropertyMap &root, const propPathIterator at, const propPathIterator pathEnd );
 	const mapped_type *findEntry( const PropPath &path )const;
 
 	/// internal recursion-function for remove
-	bool recursiveRemove( util::PropertyMap &root, const propPathIterator at, const propPathIterator pathEnd );
+	bool recursiveRemove( PropertyMap &root, const propPathIterator at, const propPathIterator pathEnd );
 
 protected:
+	template<typename T> class NeededsList: public std::list<PropPath>
+	{
+	public:
+		NeededsList() {
+			const std::list< PropertyMap::KeyType > buff = util::stringToList<PropertyMap::KeyType>( T::neededProperties ); //@todo really bad voodoo
+			assign( buff.begin(), buff.end() );
+		}
+		void applyTo( PropertyMap &props ) {
+			BOOST_FOREACH( const PropPath & ref, *this ) {
+				props.addNeeded( ref );
+			}
+		}
+	};
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// rw-backends
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -120,23 +133,17 @@ protected:
 		return k;
 	}
 	/**
-	 * Make Properties given by a space separated list needed.
-	 * \param needed string made of space serparated property-names which
-	 * will (if neccessary) be added to the PropertyMap and flagged as needed.
-	 */
-	void addNeededFromString( const std::string &needed );
-	/**
 	 * Adds a property with status needed.
 	 * \param path identifies the property to be added or if already existsing to be flagged as needed
 	 */
-	void addNeeded( const KeyType &path );
+	void addNeeded( const PropPath &path );
 
 	/**
 	 * Remove every PropertyValue which is also in the other PropertyMap and where operator== returns true.
 	 * \param other the other property tree to compare to
 	 * \param removeNeeded if a property should also be deleted it is needed
 	 */
-	void removeEqual( const isis::util::PropertyMap &other, bool removeNeeded = false );
+	void removeEqual( const PropertyMap &other, bool removeNeeded = false );
 
 	/**
 	 * Get common and unique properties from the tree.
@@ -310,7 +317,7 @@ public:
 	 * \param overwrite if existing properties shall be replaced
 	 * \returns a list of the rejected properties that couldn't be inserted, for success this should be empty
 	 */
-	PropertyMap::KeyList join( const isis::util::PropertyMap &other, bool overwrite = false );
+	PropertyMap::KeyList join( const PropertyMap &other, bool overwrite = false );
 
 	/**
 	 * Transform an existing property into another.
@@ -374,7 +381,7 @@ public:
 	 * If the requested type is not equal to type the property is stored with, an automatic conversion is done.
 	 * If that conversion failes an error is send to Runtime.
 	 * \code
-	 * getPropertyAs<isis::util::fvector4>( "MyPropertyName" );
+	 * getPropertyAs<fvector4>( "MyPropertyName" );
 	 * \endcode
 	 * \param path the path to the property
 	 * \returns the property with given type, if not set yet T() is returned.
@@ -461,6 +468,15 @@ public:
 	bool operator==( const treeNode &ref )const {
 		return m_branch == ref.m_branch && m_leaf == ref.m_leaf;
 	}
+	void insert( const treeNode &ref ) {
+		m_branch = ref.m_branch;
+		m_leaf.resize( ref.m_leaf.size() );
+		std::vector<PropertyValue>::iterator dst = m_leaf.begin();
+		BOOST_FOREACH( std::vector<PropertyValue>::const_reference src, ref.m_leaf ) {
+			const bool needed = dst->isNeeded();
+			( *dst = src ).needed() = needed;;
+		}
+	}
 	std::string toString()const {
 		std::ostringstream o;
 		o << *this;
@@ -482,12 +498,14 @@ template<class Predicate> struct PropertyMap::walkTree {
 	walkTree( KeyList &out, const KeyType &prefix ): m_out( out ), m_prefix( prefix ) {}
 	walkTree( KeyList &out ): m_out( out ) {}
 	void operator()( const_reference ref ) const {
+		const KeyType name = ( m_prefix != "" ? m_prefix + "/" : "" ) + ref.first;
+
 		if ( ref.second.is_leaf() ) {
 			if ( Predicate()( ref ) )
-				m_out.insert( m_out.end(), ( m_prefix != "" ? m_prefix + "/" : "" ) + ref.first );
+				m_out.insert( m_out.end(), name );
 		} else {
 			const PropertyMap &sub = ref.second.getBranch();
-			std::for_each( sub.begin(), sub.end(), walkTree<Predicate>( m_out, ref.first ) );
+			std::for_each( sub.begin(), sub.end(), walkTree<Predicate>( m_out, name ) );
 		}
 	}
 };

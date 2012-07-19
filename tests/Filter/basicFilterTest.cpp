@@ -1,11 +1,11 @@
 #define BOOST_TEST_MODULE FilterTest
 #define NOMINMAX 1
 #include <boost/test/unit_test.hpp>
-#include <DataStorage/filter.hpp>
 
 #include "BasicFilter/GaussianFilter.hpp"
 #include "BasicFilter/FrequencyFilter.hpp"
 #include <DataStorage/io_factory.hpp>
+#include "filter.hpp"
 
 namespace isis
 {
@@ -15,10 +15,10 @@ namespace test
 data::Image createEmptyImage( util::ivector4 size )
 {
 	data::MemChunk<uint8_t> myChunk ( size[0], size[1], size[2], size[3] ) ;
-	myChunk.setPropertyAs<util::fvector4>( "indexOrigin", util::fvector4() );
-	myChunk.setPropertyAs<util::fvector4>( "rowVec", util::fvector4( 1, 0, 0, 0 ) );
-	myChunk.setPropertyAs<util::fvector4>( "columnVec", util::fvector4( 0, 1, 0, 0 ) );
-	myChunk.setPropertyAs<util::fvector4>( "voxelSize", util::fvector4( 1, 1, 1, 1 ) );
+	myChunk.setPropertyAs<util::fvector3>( "indexOrigin", util::fvector3() );
+	myChunk.setPropertyAs<util::fvector3>( "rowVec", util::fvector3( 1, 0, 0 ) );
+	myChunk.setPropertyAs<util::fvector3>( "columnVec", util::fvector3( 0, 1, 0 ) );
+	myChunk.setPropertyAs<util::fvector3>( "voxelSize", util::fvector3( 1, 1, 1 ) );
 	myChunk.setPropertyAs<uint16_t>( "acquisitionNumber", 0 );
 	return data::Image( myChunk );
 }
