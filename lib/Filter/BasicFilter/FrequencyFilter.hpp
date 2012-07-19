@@ -8,7 +8,7 @@ namespace isis
 {
 namespace filter
 {
-class FrequencyFilter : public _internal::ImageFilterInPlace
+class FrequencyFilter : public ImageFilterInPlace
 {
 	typedef float ValueType;
 public:

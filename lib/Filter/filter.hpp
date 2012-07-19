@@ -72,8 +72,8 @@ protected:
 
 	boost::shared_ptr< util::ProgressFeedback > m_progressfeedback;
 
-	std::map< std::string, boost::shared_ptr<data::Image> > m_additionalImages;
-	std::map< std::string, boost::shared_ptr<data::Chunk> > m_additionalChunks;
+	std::map< std::string, boost::shared_ptr<data::Image> > additionalImages;
+	std::map< std::string, boost::shared_ptr<data::Chunk> > additionalChunks;
 
 };
 
@@ -129,6 +129,7 @@ protected:
 
 };
 
+} // end _internal namespace
 
 
 class ImageFilterInPlace : public _internal::InPlace<data::Image>
@@ -143,7 +144,6 @@ class ImageOutputFilter : public _internal::OutputFilterBase<data::Image>
 class ChunkOutputFilter : public _internal::OutputFilterBase<data::Chunk>
 {};
 
-} // end _internal namespace
 }
 }
 

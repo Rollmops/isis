@@ -7,13 +7,14 @@
 #include "../common.hpp"
 
 #include <numeric>
+#include <cmath>
 
 namespace isis
 {
 namespace filter
 {
 
-class GaussianFilter : public _internal::ImageFilterInPlace
+class GaussianFilter : public ImageFilterInPlace
 {
 	typedef float ValueType;
 public:

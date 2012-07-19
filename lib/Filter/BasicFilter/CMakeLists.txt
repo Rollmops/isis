@@ -5,7 +5,7 @@ set(BASIC_FILTER 	GaussianFilter.cpp
 					ConvolutionFilter.cpp
 					FrequencyFilter.cpp )
 
-file(GLOB FILTER_HDR_FILES "*.hpp")
+file(GLOB BASIC_FILTER_HDR_FILES "*.hpp")
 
 find_package(FFTW3 REQUIRED)
 
@@ -14,8 +14,8 @@ target_link_libraries(isisFilter_Basic isis_core ${FFTW3_FFTW3_LIBRARY})
 
 if(WIN32)
 install(TARGETS isisFilter_Basic  RUNTIME DESTINATION bin COMPONENT "filter")
-install(FILES ${FILTER_HDR_FILES} DESTINATION include/isis/Filter COMPONENT Development )
+install(FILES ${BASIC_FILTER_HDR_FILES} DESTINATION include/isis/Filter COMPONENT Development )
 else(WIN32)
 install(TARGETS isisFilter_Basic DESTINATION ${ISIS_FILTER_INFIX} COMPONENT "filter" )
-install(FILES ${FILTER_HDR_FILES} DESTINATION include/isis/Filter COMPONENT Development )
+install(FILES ${BASIC_FILTER_HDR_FILES} DESTINATION include/isis/Filter COMPONENT Development )
 endif(WIN32)

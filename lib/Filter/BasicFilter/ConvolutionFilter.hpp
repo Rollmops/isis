@@ -9,7 +9,7 @@ namespace isis
 namespace filter
 {
 
-class ConvolutionFilter : public _internal::ChunkFilterInPlace
+class ConvolutionFilter : public ChunkFilterInPlace
 {
 	typedef float ValueType;
 public:
@@ -20,10 +20,10 @@ public:
 				&& !parameters["convolveColumn"].isEmpty()
 				&& !parameters["convolveSlice"].isEmpty()
 				&& !parameters["convolveTime"].isEmpty()
-				&& ( m_additionalChunks.find( "kernelRow" ) != m_additionalChunks.end()
-					 || m_additionalChunks.find( "kernelColumn" ) != m_additionalChunks.end()
-					 || m_additionalChunks.find( "kernelSlice" ) != m_additionalChunks.end()
-					 || m_additionalChunks.find( "kernelTime" ) != m_additionalChunks.end()
+				&& ( additionalChunks.find( "kernelRow" ) != additionalChunks.end()
+					 || additionalChunks.find( "kernelColumn" ) != additionalChunks.end()
+					 || additionalChunks.find( "kernelSlice" ) != additionalChunks.end()
+					 || additionalChunks.find( "kernelTime" ) != additionalChunks.end()
 				   );
 	}
 	bool process( data::Chunk & );

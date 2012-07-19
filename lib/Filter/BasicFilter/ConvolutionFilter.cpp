@@ -9,22 +9,22 @@ bool ConvolutionFilter::process ( data::Chunk &chunk )
 {
 
 	if( parameters["convolveRow"] ) {
-		const data::MemChunk<ValueType> kernel ( *m_additionalChunks.at( "kernelRow" ) );
+		const data::MemChunk<ValueType> kernel ( *additionalChunks.at( "kernelRow" ) );
 		convolve( chunk, kernel, data::rowDim );
 	}
 
 	if( parameters["convolveColumn"] ) {
-		const data::MemChunk<ValueType> kernel ( *m_additionalChunks.at( "kernelColumn" ) );
+		const data::MemChunk<ValueType> kernel ( *additionalChunks.at( "kernelColumn" ) );
 		convolve( chunk, kernel, data::columnDim );
 	}
 
 	if( parameters["convolveSlice"] ) {
-		const data::MemChunk<ValueType> kernel ( *m_additionalChunks.at( "kernelSlice" ) );
+		const data::MemChunk<ValueType> kernel ( *additionalChunks.at( "kernelSlice" ) );
 		convolve( chunk, kernel, data::sliceDim );
 	}
 
 	if( parameters["convolveTime"] ) {
-		const data::MemChunk<ValueType> kernel ( *m_additionalChunks.at( "kernelTime" ) );
+		const data::MemChunk<ValueType> kernel ( *additionalChunks.at( "kernelTime" ) );
 		convolve( chunk, kernel, data::timeDim );
 	}
 

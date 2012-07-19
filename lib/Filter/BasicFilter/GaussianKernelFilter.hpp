@@ -9,7 +9,7 @@ namespace isis
 namespace filter
 {
 
-class GaussianKernelFilter : public _internal::ChunkOutputFilter
+class GaussianKernelFilter : public ChunkOutputFilter
 {
 	typedef float ValueType;
 public:
