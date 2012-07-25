@@ -38,6 +38,10 @@ if(ISIS_BUILD_FILTER )
 	add_subdirectory(Filter)
 endif(ISIS_BUILD_FILTER)
 
+if(ISIS_BUILD_OPENCL)
+	add_subdirectory(OpenCL)
+endif(ISIS_BUILD_OPENCL)
+
 # addition option: build benchmarks
 option(ISIS_BUILD_BENCHMARKS "Build the ISIS stress tests. For internal use only" OFF)
 

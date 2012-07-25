@@ -13,7 +13,7 @@ add_library(isisFilter_Basic SHARED ${BASIC_FILTER} ../filter.cpp)
 target_link_libraries(isisFilter_Basic isis_core ${FFTW3_FFTW3_LIBRARY})
 
 if(WIN32)
-install(TARGETS isisFilter_Basic  RUNTIME DESTINATION bin COMPONENT "filter")
+install(TARGETS isisFilter_Basic  LIBRARY DESTINATION lib COMPONENT "filter")
 install(FILES ${FILTER_HDR_FILES} DESTINATION include/isis/Filter COMPONENT Development )
 else(WIN32)
 install(TARGETS isisFilter_Basic DESTINATION ${ISIS_FILTER_INFIX} COMPONENT "filter" )

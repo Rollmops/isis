@@ -157,6 +157,7 @@ endif(GIT_REVISION)
 option(ISIS_BUILD_TESTS "Build the ISIS test cases. They depend on Boost-Test" OFF)
 option(ISIS_BUILD_TOOLS "Build the ISIS command line tools (converter, diff, etc pp." OFF)
 option(ISIS_BUILD_FILTER "Build the ISIS filter." OFF)
+option(ISIS_BUILD_OPENCL "Build opencl module for ISIS" OFF)
 
 ###########################################################
 # CPack config
@@ -214,6 +215,10 @@ if(ISIS_BUILD_TOOLS)
   add_subdirectory(tools)
 endif(ISIS_BUILD_TOOLS)
 
+# build opencl for isis
+if(ISIS_BUILD_OPENCL)
+  add_subdirectory(lib/OpenCL)
+endif(ISIS_BUILD_OPENCL)
 
 
 

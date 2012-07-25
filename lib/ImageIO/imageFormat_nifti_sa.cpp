@@ -984,8 +984,8 @@ void ImageFormat_NiftiSa::useQForm( util::PropertyMap &props )
 	props.remove( "nifti/qoffset" );
 
 	// voxelSize //////////////////////////////////////////////////////////////////////////////////
-	transformOrTell<util::fvector3>("nifti/pixdim","voxelSize",props,warning);
-	LOG_IF(props.hasProperty("voxelSize"), Debug, info ) << "Computed voxelSize=" << props.propertyValue( "voxelSize" ) << " from qform";
+	transformOrTell<util::fvector3>( "nifti/pixdim", "voxelSize", props, warning );
+	LOG_IF( props.hasProperty( "voxelSize" ), Debug, info ) << "Computed voxelSize=" << props.propertyValue( "voxelSize" ) << " from qform";
 }
 bool ImageFormat_NiftiSa::storeQForm( const util::PropertyMap &props, _internal::nifti_1_header *head )
 {
