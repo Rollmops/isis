@@ -2,7 +2,7 @@
 #define NOMINMAX 1
 #include <boost/test/unit_test.hpp>
 
-#include "worksize.hpp"
+#include "work_size.hpp"
 
 namespace isis
 {

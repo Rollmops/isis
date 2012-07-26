@@ -30,8 +30,10 @@
 
 #include "CL/cl.h"
 
-namespace isis {
-namespace cl {
+namespace isis
+{
+namespace cl
+{
 
 enum DeviceType {   CPU = CL_DEVICE_TYPE_CPU,
 					GPU = CL_DEVICE_TYPE_GPU,

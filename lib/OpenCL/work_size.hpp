@@ -36,7 +36,7 @@ namespace isis
 namespace cl
 {
 
-template<unsigned int DIM>
+template<cl_uint DIM>
 class WorkSize
 {
 public:
@@ -44,7 +44,6 @@ public:
 
 	WorkSize() {
 		//acquire the max local and global sizes
-
 
 	}
 private:
