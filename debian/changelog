@@ -1,3 +1,9 @@
+isis (0.7.3-1) natty; urgency=low
+
+  * fixed reading of paths that include "tar"
+
+ -- ISIS Group (The friendly isis team) <gr_isis@cbs.mpg.de>  Wed, 14 Aug 2012 13:11:21 +0200
+
 isis (0.7.2-1) natty; urgency=low
 
   * add dealing with broken slice code in nifti sa plugin
